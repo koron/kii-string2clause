@@ -45,6 +45,11 @@ var value = alt(qstr, number, bool);
 
 var propname = regex(/[a-zA-Z_][0-9a-zA-Z_]*/);
 
+var expr = lazy('expression', function() {
+  return alt(exprEq, exprPrefix, exprRange, exprBetween, exprIn, exprHas,
+      exprAnd);
+});
+
 var exprEq = seq(lexeme(propname), lexeme(equal), value).map(function(m) {
   return { type: 'eq', field: m[0], value: m[2] };
 });
@@ -101,19 +106,13 @@ var exprHas = seqMap(lexeme(keywordHas), lexeme(propname), types, function(_, fi
   return { type: 'hasField', field: field, fieldType: type };
 });
 
-var exprAnd = lazy('AND', function() {
-  return seqMap(expr, lexeme(opAnd), expr, function(left, _, right) {
-    if (left['type'] === 'and') {
-      left['clauses'].push(right);
-      return left;
-    }
-    return { type: 'and', clauses: [ left, right ] };
-  });
+var exprAnd = seqMap(expr, lexeme(opAnd), expr, function(left, _, right) {
+  if (left['type'] === 'and') {
+    left['clauses'].push(right);
+    return left;
+  }
+  return { type: 'and', clauses: [ left, right ] };
 });
-
-var simple = alt(exprEq, exprPrefix, exprRange, exprBetween, exprIn, exprHas);
-
-var expr = alt(simple, exprAnd);
 
 function exprTest(query) {
   console.log("IN:", query);
