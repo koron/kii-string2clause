@@ -1,0 +1,14 @@
+{
+  "name": "kii-string2clause",
+  "version": "0.1.0",
+  "description": "convert free style query to Kii's query clause",
+  "main": "string2clause.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MURAOKA Taro",
+  "license": "ISC",
+  "dependencies": {
+    "parsimmon": "^0.8.1"
+  }
+}
