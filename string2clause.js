@@ -6,6 +6,7 @@ var alt = Parsimmon.alt;
 var seq = Parsimmon.seq;
 var seqMap = Parsimmon.seqMap;
 var lazy = Parsimmon.lazy;
+var sepBy = Parsimmon.sepBy;
 
 function lexeme(p) {
   return p.skip(Parsimmon.optWhitespace);
@@ -45,9 +46,12 @@ var value = alt(qstr, number, bool);
 
 var propname = regex(/[a-zA-Z_][0-9a-zA-Z_]*/);
 
+var simple = lazy('simple expression', function() {
+  return alt(exprEq, exprPrefix, exprRange, exprBetween, exprIn, exprHas);
+});
+
 var expr = lazy('expression', function() {
-  return alt(exprEq, exprPrefix, exprRange, exprBetween, exprIn, exprHas,
-      exprAnd);
+  return alt(exprAnd, exprOr, simple);
 });
 
 var exprEq = seq(lexeme(propname), lexeme(equal), value).map(function(m) {
@@ -106,23 +110,23 @@ var exprHas = seqMap(lexeme(keywordHas), lexeme(propname), types, function(_, fi
   return { type: 'hasField', field: field, fieldType: type };
 });
 
-var exprAnd = seqMap(expr, lexeme(opAnd), expr, function(left, _, right) {
-  if (left['type'] === 'and') {
-    left['clauses'].push(right);
-    return left;
-  }
-  return { type: 'and', clauses: [ left, right ] };
+var exprAnd = sepBy(lexeme(simple), lexeme(opAnd)).map(function(clauses) {
+  return { type: 'and', clauses: clauses };
+});
+
+var exprOr = sepBy(lexeme(simple), lexeme(opOr)).map(function(clauses) {
+  return { type: 'or', clauses: clauses };
 });
 
 function exprTest(query) {
   console.log("IN:", query);
-  var clause = expr.parse(query).value;
-  if (!clause) {
-    console.log("ERROR");
+  var r = expr.parse(query);
+  if (!r.status) {
+    console.log("ERROR:", Parsimmon.formatError(query, r));
     console.log("");
     return;
   }
-  console.log("OUT:", clause);
+  console.log("OUT:", r.value);
   console.log("");
 }
 
@@ -143,8 +147,10 @@ exprTest('HAS foo INTEGER');
 exprTest('HAS y DECIMAL');
 exprTest('HAS flag BOOLEAN');
 exprTest('X=10');
-exprTest('X=10 AND Y=20');
-//exprTest('name PREFIX "John" AND age = 30');
+exprTest('name PREFIX "John" AND age = 30');
+exprTest('X=10 AND Y=20 AND Z=30');
+exprTest('name = "John" OR age = 30');
+exprTest('X=10 OR Y=20 OR Z=30');
 
 module.exports = {
   exprEq: exprEq,
