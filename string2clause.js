@@ -118,7 +118,7 @@ var exprOr = sepBy(lexeme(simple), lexeme(opOr)).map(function(clauses) {
   return { type: 'or', clauses: clauses };
 });
 
-function exprTest(query) {
+function t(query) {
   console.log("IN:", query);
   var r = expr.parse(query);
   if (!r.status) {
@@ -130,27 +130,27 @@ function exprTest(query) {
   console.log("");
 }
 
-exprTest('X = "abc"');
-exprTest('X = 123');
-exprTest('X = "123"');
-exprTest('X = "including \\"quote\\" in string"');
-exprTest('X PREFIX "abc"');
-exprTest('X PREFIX"abc"');
-exprTest('X >= 20');
-exprTest('X > 20');
-exprTest('X <= 20');
-exprTest('X < 20');
-exprTest('20 <= X < 30');
-exprTest('X IN ("abc" 123 "foo")');
-exprTest('HAS X STRING');
-exprTest('HAS foo INTEGER');
-exprTest('HAS y DECIMAL');
-exprTest('HAS flag BOOLEAN');
-exprTest('X=10');
-exprTest('name PREFIX "John" AND age = 30');
-exprTest('X=10 AND Y=20 AND Z=30');
-exprTest('name = "John" OR age = 30');
-exprTest('X=10 OR Y=20 OR Z=30');
+t('X = "abc"');
+t('X = 123');
+t('X = "123"');
+t('X = "including \\"quote\\" in string"');
+t('X PREFIX "abc"');
+t('X PREFIX"abc"');
+t('X >= 20');
+t('X > 20');
+t('X <= 20');
+t('X < 20');
+t('20 <= X < 30');
+t('X IN ("abc" 123 "foo")');
+t('HAS X STRING');
+t('HAS foo INTEGER');
+t('HAS y DECIMAL');
+t('HAS flag BOOLEAN');
+t('X=10');
+t('name PREFIX "John" AND age = 30');
+t('X=10 AND Y=20 AND Z=30');
+t('name = "John" OR age = 30');
+t('X=10 OR Y=20 OR Z=30');
 
 module.exports = {
   exprEq: exprEq,
