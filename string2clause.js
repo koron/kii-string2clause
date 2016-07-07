@@ -110,12 +110,20 @@ var exprHas = seqMap(lexeme(keywordHas), lexeme(propname), types, function(_, fi
   return { type: 'hasField', field: field, fieldType: type };
 });
 
-var exprAnd = sepBy(lexeme(simple), lexeme(opAnd)).map(function(clauses) {
-  return { type: 'and', clauses: clauses };
+var exprAnd = seqMap(lexeme(simple).skip(lexeme(opAnd)), lexeme(expr), function(left, right) {
+  if (right['type'] === 'and') {
+    right['clauses'].unshift(left);
+    return right;
+  }
+  return { type: 'and', clauses: [ left, right ] };
 });
 
-var exprOr = sepBy(lexeme(simple), lexeme(opOr)).map(function(clauses) {
-  return { type: 'or', clauses: clauses };
+var exprOr = seqMap(lexeme(simple).skip(lexeme(opOr)), lexeme(expr), function(left, right) {
+  if (right['type'] === 'or') {
+    right['clauses'].unshift(left);
+    return right;
+  }
+  return { type: 'or', clauses: [ left, right ] };
 });
 
 function t(query) {
