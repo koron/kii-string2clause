@@ -20,6 +20,7 @@ var exclam = string('!');
 
 var keywordTrue = string('true');
 var keywordFalse = string('false');
+var keywordNull = string('null');
 var keywordPrefix = string('PREFIX');
 var keywordIn = string('IN');
 var keywordHas = string('HAS');
@@ -44,7 +45,10 @@ var number = regex(/[1-9][0-9]*/).map(Number);
 var bool = alt(keywordTrue, keywordFalse).map(function(s) {
   return s === "true";
 });
-var value = alt(qstr, number, bool);
+var vnull = keywordNull.map(function(s) {
+  return null;
+});
+var value = alt(qstr, number, bool, vnull);
 
 var propname = regex(/[a-zA-Z_][0-9a-zA-Z_]*/);
 
@@ -180,6 +184,7 @@ t('X=10 AND Y=20 OR Z=30');
 t('X=10 OR Y=20 AND Z=30');
 t('(X=10 AND Y=20) OR Z=30');
 t('(X=10 OR Y=20) AND Z=30');
+t('X = null');
 
 module.exports = {
   exprEq: exprEq,
