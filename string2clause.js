@@ -31,6 +31,7 @@
   var lparen = string('(');
   var rparen = string(')');
   var exclam = string('!');
+  var hyphen = string('-');
 
   var keywordTrue = string('true');
   var keywordFalse = string('false');
@@ -38,6 +39,7 @@
   var keywordPrefix = string('PREFIX');
   var keywordIn = string('IN');
   var keywordHas = string('HAS');
+  var keywordFrom = string('FROM');
 
   var opLess = alt(string('<='), string('<'));
   var opGreater = alt(string('>='), string('>'));
@@ -63,11 +65,16 @@
     return null;
   });
   var value = alt(qstr, number, bool, vnull);
+  var pos = seqMap(lexeme(lparen), lexeme(number), lexeme(number).skip(rparen), function(_, lat, lon) {
+    return { "_type": "point", lat: lat, lon: lon };
+  });
 
   var propname = regex(/[a-zA-Z_][0-9a-zA-Z_]*/);
 
   var simple = lazy('simple expression', function() {
-    return alt(exprEq, exprPrefix, exprRange, exprBetween, exprIn, exprHas,
+    return alt(exprEq, exprPrefix, exprRange, exprBetween,
+        exprGeoBox, exprGeoDist,
+        exprIn, exprHas,
         exprNot, exprGroup);
   });
 
@@ -149,6 +156,24 @@
       return right;
     }
     return { type: 'or', clauses: [ left, right ] };
+  });
+
+  var exprGeoBox = seqMap(lexeme(propname).skip(lexeme(keywordIn)), lexeme(pos).skip(lexeme(hyphen)), pos, function(field, ne, sw) {
+    return {
+      type: "geobox",
+      field: field,
+      box: { ne: ne, sw: sw, },
+    };
+  });
+
+  var exprGeoDist = seqMap(lexeme(propname).skip(lexeme(keywordIn)), lexeme(number).skip(lexeme(keywordFrom)), pos, function(field, radius, center) {
+    return {
+      type: "geodistance",
+      field: field,
+      center: center,
+      radius: radius,
+      putDistanceInto: "myDist",
+    }
   });
 
   var exprNot = seqMap(lexeme(alt(exclam, opNot)), expr, function(_, clause) {
