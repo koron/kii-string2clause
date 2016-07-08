@@ -32,6 +32,7 @@
   var rparen = string(')');
   var exclam = string('!');
   var hyphen = string('-');
+  var period = string('.');
 
   var keywordTrue = string('true');
   var keywordFalse = string('false');
@@ -57,7 +58,9 @@
   var qstr = seq(quote, regex(/([^"\\]|\\.)*/), quote).map(function(m) {
     return JSON.parse(m.join(''));
   });
-  var number = regex(/[1-9][0-9]*/).map(Number);
+  var vint = regex(/[+-]?[1-9][0-9]*/);
+  var vfloat = regex(/[+-]?([1-9][0-9]*)?\.[0-9]+(e[+-]?[1-9][0-9]*)?/i);
+  var number = alt(vfloat, vint).map(Number);
   var bool = alt(keywordTrue, keywordFalse).map(function(s) {
     return s === "true";
   });
