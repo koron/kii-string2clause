@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Query String to Clause Demo</title>
+    <link rel="stylesheet" type="text/css" href="./theme.css">
+  </head>
+  <body>
+    <div id="main-container"></div>
+    <script type="text/ractive" id="main-template">
+<section id="query-pane" class="half-pane">
+  <form id="query-form">
+    <input id="query-input" type="text" placeholder="(type query here)"
+      value="{{query}}">
+    <input id="query-clear" type="button" value="Clear">
+  </form>
+  <div id="query-examples">
+    <h3>Examples</h3>
+    <ul class="query-examples">
+      <li>name = &quot;abc&quot;</li>
+      <li>age = 123</li>
+      <li>name PREFIX "abc"</li>
+      <li>20 &lt;= age &lt; 30</li>
+      <li>name PREFIX "John" AND age = 30</li>
+      <li>X=10 AND Y=20 OR Z=30</li>
+      <li>(X=10 AND Y=20) OR Z=30</li>
+      <li>NOT X=10</li>
+      <li>! X=10</li>
+    </ul>
+  </div>
+  <div id="description">
+    <h3>Description</h3>
+    <p>
+    Please read <a href="https://github.com/koron/kii-string2clause/blob/master/README.md#expression-for-query-types" target="syntax">syntax of query</a>.<br/>
+    <tt>geoBox</tt> and <tt>geoDistance</tt> are not implemented yet.
+    </p>
+  </div>
+</section>
+<section id="result" class="half-pane">
+  <textarea id="result-clause" readonly placeholder="(no clause JSON)"
+    value='{{clause}}'></textarea>
+  <textarea id="result-error" readonly placeholder="(no errors)"
+    value='{{error}}'></textarea>
+</section>
+    </script>
+    <script src="./ractive-0.7.3.js"></script>
+    <script src="./parsimmon.js"></script>
+    <script src="./string2clause.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>

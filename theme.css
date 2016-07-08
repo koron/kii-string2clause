@@ -1,0 +1,91 @@
+body {
+  margin: 0;
+}
+
+#main-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+.half-pane {
+  float: left;
+  display: block;
+  box-sizing: border-box;
+  width: calc(50% - 0.5em);
+  height: 100%;
+  margin-left: 0.5em;
+}
+
+#query-form {
+  display: block;
+  height: 40%;
+}
+
+#query-form input {
+  font-size: 16pt;
+  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+}
+
+#query-input {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#query-clear {
+  background-color: #6666ff;
+  color: #fff;
+  border: none;
+  float: right;
+  margin-top: 0.5ex;
+}
+
+#query-examples {
+  display: block;
+  box-sizing: border-box;
+  height: 30%;
+  padding-top: 1ex;
+}
+
+#description {
+  display: block;
+  box-sizing: border-box;
+  height: 30%;
+  padding-top: 1ex;
+}
+
+#result-clause {
+  box-sizing: border-box;
+  width: 100%;
+  height: 60%;
+  font-size: 12pt;
+  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+  resize: none;
+}
+
+#result-error {
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 12pt;
+  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+  resize: none;
+  color: #ff0000;
+  margin-top: 1ex;
+  height: calc(40% - 1ex);
+}
+
+h3 {
+  margin: 1ex 0;
+}
+
+.query-examples {
+  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+  font-size: 10.5pt;
+}
+
+div > p {
+  margin-left: 0.5em;
+}
