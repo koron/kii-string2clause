@@ -16,6 +16,7 @@ var quote = string('"');
 var equal = string('=');
 var lparen = string('(');
 var rparen = string(')');
+var exclam = string('!');
 
 var keywordTrue = string('true');
 var keywordFalse = string('false');
@@ -28,6 +29,7 @@ var opGreater = alt(string('>='), string('>'));
 var opCmp = alt(opLess, opGreater);
 var opAnd = string('AND');
 var opOr = string('OR');
+var opNot = string('NOT');
 
 var typeString = string('STRING');
 var typeInteger = string('INTEGER');
@@ -47,11 +49,16 @@ var value = alt(qstr, number, bool);
 var propname = regex(/[a-zA-Z_][0-9a-zA-Z_]*/);
 
 var simple = lazy('simple expression', function() {
-  return alt(exprEq, exprPrefix, exprRange, exprBetween, exprIn, exprHas);
+  return alt(exprEq, exprPrefix, exprRange, exprBetween, exprIn, exprHas,
+      exprNot, exprGroup);
+});
+
+var complex = lazy('complex expression', function() {
+  return alt(exprAnd, exprOr);
 });
 
 var expr = lazy('expression', function() {
-  return alt(exprAnd, exprOr, simple);
+  return alt(complex, simple);
 });
 
 var exprEq = seq(lexeme(propname), lexeme(equal), value).map(function(m) {
@@ -126,6 +133,14 @@ var exprOr = seqMap(lexeme(simple).skip(lexeme(opOr)), lexeme(expr), function(le
   return { type: 'or', clauses: [ left, right ] };
 });
 
+var exprGroup = seqMap(lexeme(lparen), lexeme(complex).skip(rparen), function(_, clause) {
+  return clause;
+});
+
+var exprNot = seqMap(lexeme(alt(exclam, opNot)), expr, function(_, clause) {
+  return { type: 'or', clause: clause };
+});
+
 function t(query) {
   console.log("IN:", query);
   var r = expr.parse(query);
@@ -134,7 +149,7 @@ function t(query) {
     console.log("");
     return;
   }
-  console.log("OUT:", r.value);
+  console.log("OUT:", JSON.stringify(r.value, null, 2));
   console.log("");
 }
 
@@ -159,6 +174,12 @@ t('name PREFIX "John" AND age = 30');
 t('X=10 AND Y=20 AND Z=30');
 t('name = "John" OR age = 30');
 t('X=10 OR Y=20 OR Z=30');
+t('!X="abc"');
+t('NOT X=123');
+t('X=10 AND Y=20 OR Z=30');
+t('X=10 OR Y=20 AND Z=30');
+t('(X=10 AND Y=20) OR Z=30');
+t('(X=10 OR Y=20) AND Z=30');
 
 module.exports = {
   exprEq: exprEq,
