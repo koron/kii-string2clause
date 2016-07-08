@@ -25,14 +25,12 @@ body {
   height: 40%;
 }
 
-#query-form input {
-  font-size: 16pt;
-  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
-}
-
 #query-input {
   box-sizing: border-box;
   width: 100%;
+
+  font-size: 16pt;
+  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
 }
 
 #query-clear {
@@ -41,6 +39,9 @@ body {
   border: none;
   float: right;
   margin-top: 0.5ex;
+
+  font-size: 16pt;
+  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
 }
 
 #query-examples {

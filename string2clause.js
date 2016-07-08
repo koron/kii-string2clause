@@ -151,12 +151,12 @@
     return { type: 'or', clauses: [ left, right ] };
   });
 
-  var exprGroup = seqMap(lexeme(lparen), lexeme(complex).skip(rparen), function(_, clause) {
-    return clause;
-  });
-
   var exprNot = seqMap(lexeme(alt(exclam, opNot)), expr, function(_, clause) {
     return { type: 'not', clause: clause };
+  });
+
+  var exprGroup = seqMap(lexeme(lparen), lexeme(alt(complex, exprNot)).skip(rparen), function(_, clause) {
+    return clause;
   });
 
   return expr;
