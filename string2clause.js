@@ -58,8 +58,15 @@
   var qstr = seq(quote, regex(/([^"\\]|\\.)*/), quote).map(function(m) {
     return JSON.parse(m.join(''));
   });
-  var vint = regex(/[+-]?[1-9][0-9]*/);
+
   var vfloat = regex(/[+-]?([1-9][0-9]*)?\.[0-9]+(e[+-]?[1-9][0-9]*)?/i);
+  var vint = regex(/[+-]?[1-9][0-9]*/);
+  var vfrac = regex(/[0-9]+/)
+  var vexp = regex(/e/i).then(vint);
+  var vfloat2 = seqMap(vint, period, vfrac, vexp, function() {
+    console.log(arguments);
+  });
+
   var number = alt(vfloat, vint).map(Number);
   var bool = alt(keywordTrue, keywordFalse).map(function(s) {
     return s === "true";
