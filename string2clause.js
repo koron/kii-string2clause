@@ -63,9 +63,10 @@
     return JSON.parse(m.join(''));
   });
 
+  var digits = regex(/[0-9]+/);
   var vint = regex(/[+-]?(0|[1-9][0-9]*)/);
-  var vfrac = seqMap(period, regex(/[0-9]+/), join);
-  var vexp = seqMap(regex(/e[+-]?/i), Parsimmon.digits, join);
+  var vfrac = seqMap(period, digits, join);
+  var vexp = seqMap(regex(/e[+-]?/i), digits, join);
   var vintFrac = seqMap(vint, vfrac, join);
   var vintExp = seqMap(vint, vexp, join);
   var vintFracExp = seqMap(vint, vfrac, vexp, join);
