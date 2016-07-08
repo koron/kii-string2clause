@@ -12,10 +12,8 @@
     el: '#main-container',
     template: "#main-template",
     data: data,
-    events: {
-      clearQuery: function() {
-        this.set('query', '');
-      },
+    clearQuery: function() {
+      this.set('query', '');
     },
   });
 

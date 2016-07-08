@@ -9,11 +9,11 @@
     <div id="main-container"></div>
     <script type="text/ractive" id="main-template">
 <section id="query-pane" class="half-pane">
-  <form id="query-form">
+  <div id="query-form">
     <input id="query-input" type="text" placeholder="(type query here)"
       value="{{query}}">
-    <button id="query-clear" on-click="clearQuery">Clear</button>
-  </form>
+    <button id="query-clear" on-click="clearQuery()">Clear</button>
+  </div>
   <div id="query-examples">
     <h3>Examples</h3>
     <ul class="query-examples">
