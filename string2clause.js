@@ -26,6 +26,10 @@
     return p.skip(Parsimmon.optWhitespace);
   }
 
+  function join() {
+    return Array.prototype.join.call(arguments, '');
+  }
+
   var quote = string('"');
   var equal = string('=');
   var lparen = string('(');
@@ -59,15 +63,14 @@
     return JSON.parse(m.join(''));
   });
 
-  var vfloat = regex(/[+-]?([1-9][0-9]*)?\.[0-9]+(e[+-]?[1-9][0-9]*)?/i);
   var vint = regex(/[+-]?[1-9][0-9]*/);
-  var vfrac = regex(/[0-9]+/)
-  var vexp = regex(/e/i).then(vint);
-  var vfloat2 = seqMap(vint, period, vfrac, vexp, function() {
-    console.log(arguments);
-  });
+  var vfrac = seqMap(period, regex(/[0-9]+/), join);
+  var vexp = seqMap(regex(/e/i), vint, join);
+  var vintFrac = seqMap(vint, vfrac, join);
+  var vintExp = seqMap(vint, vexp, join);
+  var vintFracExp = seqMap(vint, vfrac, vexp, join);
 
-  var number = alt(vfloat, vint).map(Number);
+  var number = alt(vintFracExp, vintExp, vintFrac, vint).map(Number);
   var bool = alt(keywordTrue, keywordFalse).map(function(s) {
     return s === "true";
   });
