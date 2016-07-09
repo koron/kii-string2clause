@@ -42,6 +42,12 @@ ok('X=-12345', {type:'eq', field:'X', value:-12345});
 ok('name = "John"', { type: 'eq', field: 'name', value: 'John' });
 ok('age = 30', { type: 'eq', field: 'age', value: 30 });
 ok('X = "a \\"b\\" c"', { type: 'eq', field: 'X', value: 'a "b" c' });
+ok('X="abc"', { type: 'eq', field: 'X', value: 'abc' });
+
+// PrefixClause
+ok('name PREFIX "foo"', { type:'prefix', field:'name', prefix:'foo' });
+ok('V^="bar"', { type:'prefix', field:'V', prefix:'bar' });
+ok('V ^= "bar"', { type:'prefix', field:'V', prefix:'bar' });
 
 // NotClause
 ok('!A=123', {type:'not', clause:{type:'eq', field:'A', value:123}});

@@ -26,6 +26,7 @@
     *   `X = 123` - by integer
     *   `X = "123"` - by string
 *   prefix
+    *   `X ^= "foo"` - starts with "foo"
     *   `X PREFIX "abc"` - starts with "abc"
 *   range
     *   `X <= 10`

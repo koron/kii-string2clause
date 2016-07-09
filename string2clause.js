@@ -52,6 +52,7 @@
   var opAnd = string('AND');
   var opOr = string('OR');
   var opNot = string('NOT');
+  var opPrefix = string('^=');
 
   var typeString = string('STRING');
   var typeInteger = string('INTEGER');
@@ -100,12 +101,12 @@
     return alt(complex, simple);
   });
 
-  var exprEq = seq(lexeme(propname), lexeme(equal), value).map(function(m) {
-    return { type: 'eq', field: m[0], value: m[2] };
+  var exprEq = seqMap(lexeme(propname).skip(lexeme(equal)), value, function(field, value) {
+    return { type: 'eq', field: field, value: value };
   });
 
-  var exprPrefix = seq(lexeme(propname), lexeme(keywordPrefix), qstr).map(function(m) {
-    return { type: 'prefix', field: m[0], prefix: m[2] };
+  var exprPrefix = seqMap(lexeme(propname).skip(lexeme(alt(opPrefix, keywordPrefix))), qstr, function(field, prefix) {
+    return { type: 'prefix', field: field, prefix: prefix };
   });
 
   var exprRange = seq(lexeme(propname), lexeme(opCmp), number).map(function(m) {
