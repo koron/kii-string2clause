@@ -4,7 +4,7 @@
   "description": "convert free style query to Kii's query clause",
   "main": "string2clause.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "author": "MURAOKA Taro",
   "license": "ISC",
