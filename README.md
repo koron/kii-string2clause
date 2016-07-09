@@ -22,7 +22,7 @@
 
 *   eq
     *   `X = "abc"`
-    *   `X = abc` - by string `abc`
+    *   ~~`X = abc` - by string `abc`~~ (not supported yet)
     *   `X = 123` - by integer
     *   `X = "123"` - by string
 *   prefix
@@ -33,12 +33,12 @@
     *   `X >= 20`
     *   `X > 20`
     *   `10 <= X < 20` - it would be great
-    *   `X BETWEEN 10 AND 20` - easy for parser, but should be consider for
-        include/exclude values
+    *   ~~`X BETWEEN 10 AND 20` - easy for parser, but should be consider for
+        include/exclude values~~
 *   all
-    *   `` - completely empty
+    *   ~~` ` - completely empty~~
 *   in
-    *   `X IN (foo bar baz)`
+    *   `X IN ("foo" "bar" 123)`
 *   hasField
     *   `HAS X {TYPE}` - type: `STRING`, `INTEGER`, `DECIMAL`, `BOOLEAN`
 *   and
@@ -61,4 +61,4 @@
     *    `"abc"` - quoted string parsed as `abc`
     *    `123` - as integer/number
     *    `"123"` - as string `123`
-    *    ~~`abc` - string `abc`~~
+    *    ~~`abc` - string `abc`~~ (not supported yet)
