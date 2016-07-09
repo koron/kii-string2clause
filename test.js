@@ -14,6 +14,11 @@ function ok(s, c) {
   return true;
 }
 
+// EqualClause
 ok('name = "John"', { type: 'eq', field: 'name', value: 'John' });
 ok('age = 30', { type: 'eq', field: 'age', value: 30 });
 ok('X = "a \\"b\\" c"', { type: 'eq', field: 'X', value: 'a "b" c' });
+
+// NotClause
+ok('!A=123', {type:'not', clause:{type:'eq', field:'A', value:123}});
+ok('NOT A=123', {type:'not', clause:{type:'eq', field:'A', value:123}});

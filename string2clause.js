@@ -190,7 +190,7 @@
     }
   });
 
-  var exprNot = seqMap(lexeme(alt(exclam, opNot)), expr, function(_, clause) {
+  var exprNot = seqMap(lexeme(alt(exclam, opNot)).then(expr), function(clause) {
     return { type: 'not', clause: clause };
   });
 
