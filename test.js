@@ -45,7 +45,7 @@ ok('X=+1.23e+45', {type:'eq', field:'X', value:1.23e+45});
 ok('X=+1.23e-45', {type:'eq', field:'X', value:1.23e-45});
 ok('X=+1e+23', {type:'eq', field:'X', value:1e+23});
 ok('X=+1e-23', {type:'eq', field:'X', value:1e-23});
-ok('X=+12345', {type:'eq', field:'X', value:-12345});
+ok('X=+12345', {type:'eq', field:'X', value:12345});
 
 // PrefixClause
 ok('name PREFIX "foo"', { type:'prefix', field:'name', prefix:'foo' });
@@ -70,3 +70,8 @@ ok('12<X<=34', {type:'range', field:'X', lowerLimit:12, upperLimit:34,
   lowerIncluded:false, upperIncluded:true});
 ok('12<X<34', {type:'range', field:'X', lowerLimit:12, upperLimit:34,
   lowerIncluded:false, upperIncluded:false});
+
+// InClause
+ok('X IN (123 456 789)', {type:'in', field:'X', values:[123, 456, 789]});
+ok('X IN (123 "abc" true)', {type:'in', field:'X', values:[123, "abc", true]});
+ok('X IN (false)', {type:'in', field:'X', values:[false]});
