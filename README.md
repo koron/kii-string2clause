@@ -59,7 +59,11 @@
 *   grouping
     *    `( {EXPR} )`
 *   values
-    *    `"abc"` - quoted string parsed as `abc`
-    *    `123` - as integer/number
-    *    `"123"` - as string `123`
-    *    ~~`abc` - string `abc`~~ (not supported yet)
+    *   `"abc"` - quoted string parsed as `abc`
+    *   `123` - as integer/number
+    *   `"123"` - as string `123`
+    *   `-1.23e+45`, `1e10`, `1.2345` - floating point number
+        *   comply with [spec of JSON's **number**](http://json.org/)
+    *   `true`, `false` - boolean values
+    *   `null` - null value
+    *   ~~`abc` - string `abc`~~ (not supported yet)
