@@ -16,4 +16,4 @@ function ok(s, c) {
 
 ok('name = "John"', { type: 'eq', field: 'name', value: 'John' });
 ok('age = 30', { type: 'eq', field: 'age', value: 30 });
-ok('X = "foo \\"bar\\" baz"', { type: 'eq', field: 'X', value: 'foo "bar" baz' });
+ok('X = "a \\"b\\" c"', { type: 'eq', field: 'X', value: 'a "b" c' });
