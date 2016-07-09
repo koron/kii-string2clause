@@ -14,6 +14,31 @@ function ok(s, c) {
   return true;
 }
 
+// number (int+frac+exp)
+ok('X=1.23e45', {type:'eq', field:'X', value:1.23e+45});
+ok('X=1.23e+45', {type:'eq', field:'X', value:1.23e+45});
+ok('X=1.23e-45', {type:'eq', field:'X', value:1.23e-45});
+ok('X=-1.23e45', {type:'eq', field:'X', value:-1.23e+45});
+ok('X=-1.23e+45', {type:'eq', field:'X', value:-1.23e+45});
+ok('X=-1.23e-45', {type:'eq', field:'X', value:-1.23e-45});
+ok('X=+1.23e45', {type:'eq', field:'X', value:1.23e+45});
+ok('X=+1.23e+45', {type:'eq', field:'X', value:1.23e+45});
+ok('X=+1.23e-45', {type:'eq', field:'X', value:1.23e-45});
+// number (int+exp)
+ok('X=1e23', {type:'eq', field:'X', value:1e+23});
+ok('X=1e+23', {type:'eq', field:'X', value:1e+23});
+ok('X=1e-23', {type:'eq', field:'X', value:1e-23});
+ok('X=-1e+23', {type:'eq', field:'X', value:-1e+23});
+ok('X=-1e-23', {type:'eq', field:'X', value:-1e-23});
+ok('X=+1e+23', {type:'eq', field:'X', value:1e+23});
+ok('X=+1e-23', {type:'eq', field:'X', value:1e-23});
+// number (int+frac)
+ok('X=1.23', {type:'eq', field:'X', value:1.23});
+ok('X=-1.23', {type:'eq', field:'X', value:-1.23});
+// number (int)
+ok('X=12345', {type:'eq', field:'X', value:12345});
+ok('X=-12345', {type:'eq', field:'X', value:-12345});
+
 // EqualClause
 ok('name = "John"', { type: 'eq', field: 'name', value: 'John' });
 ok('age = 30', { type: 'eq', field: 'age', value: 30 });
