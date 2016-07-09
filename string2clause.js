@@ -46,8 +46,20 @@
   var keywordHas = string('HAS');
   var keywordFrom = string('FROM');
 
-  var opLess = alt(string('<='), string('<'));
-  var opGreater = alt(string('>='), string('>'));
+  var opLess = alt(string('<='), string('<')).map(function(op) {
+    return {
+      limitField: 'upperLimit',
+      includedField: 'upperIncluded',
+      includedValue: op === '<=',
+    };
+  });
+  var opGreater = alt(string('>='), string('>')).map(function(op) {
+    return {
+      limitField: 'lowerLimit',
+      includedField: 'lowerIncluded',
+      includedValue: op === '>=',
+    };
+  });
   var opCmp = alt(opLess, opGreater);
   var opAnd = string('AND');
   var opOr = string('OR');
@@ -109,28 +121,10 @@
     return { type: 'prefix', field: field, prefix: prefix };
   });
 
-  var exprRange = seq(lexeme(propname), lexeme(opCmp), number).map(function(m) {
-    var c = { type: 'range', field: m[0] };
-    switch (m[1]) {
-      case '<':
-        c['upperLimit'] = m[2];
-        c['upperIncluded'] = false;
-        break;
-      case '<=':
-        c['upperLimit'] = m[2];
-        c['upperIncluded'] = true;
-        break;
-      case '>':
-        c['lowerLimit'] = m[2];
-        c['lowerIncluded'] = false;
-        break;
-      case '>=':
-        c['lowerLimit'] = m[2];
-        c['lowerIncluded'] = true;
-        break;
-      default:
-        // FIXME: raise error.
-    }
+  var exprRange = seqMap(lexeme(propname), lexeme(opCmp), number, function(field, op, limit) {
+    var c = { type: 'range', field: field };
+    c[op.limitField] = limit;
+    c[op.includedField] = op.includedValue;
     return c;
   });
 
@@ -139,9 +133,9 @@
       type: 'range',
       field: field,
       lowerLimit: lowerVal,
-      lowerIncluded: lowerOp === "<=",
+      lowerIncluded: lowerOp.includedValue,
       upperLimit: upperVal,
-      upperIncluded: upperOp === "<=",
+      upperIncluded: upperOp.includedValue,
     };
   });
 

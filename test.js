@@ -52,3 +52,18 @@ ok('V ^= "bar"', { type:'prefix', field:'V', prefix:'bar' });
 // NotClause
 ok('!A=123', {type:'not', clause:{type:'eq', field:'A', value:123}});
 ok('NOT A=123', {type:'not', clause:{type:'eq', field:'A', value:123}});
+
+// RangeClause (single)
+ok('X<12', {type:'range', field:'X', upperLimit:12, upperIncluded:false});
+ok('X<=34', {type:'range', field:'X', upperLimit:34, upperIncluded:true});
+ok('X>12', {type:'range', field:'X', lowerLimit:12, lowerIncluded:false});
+ok('X>=34', {type:'range', field:'X', lowerLimit:34, lowerIncluded:true});
+// RangeClause (between)
+ok('12<=X<=34', {type:'range', field:'X', lowerLimit:12, upperLimit: 34,
+  lowerIncluded:true, upperIncluded:true});
+ok('12<=X<34', {type:'range', field:'X', lowerLimit:12, upperLimit: 34,
+  lowerIncluded:true, upperIncluded:false});
+ok('12<X<=34', {type:'range', field:'X', lowerLimit:12, upperLimit: 34,
+  lowerIncluded:false, upperIncluded:true});
+ok('12<X<34', {type:'range', field:'X', lowerLimit:12, upperLimit: 34,
+  lowerIncluded:false, upperIncluded:false});
