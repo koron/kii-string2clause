@@ -198,5 +198,12 @@
     return clause;
   });
 
-  return expr;
+  return {
+    parse: function(s) {
+      return expr.parse(s);
+    },
+    formatError: function(r, s) {
+      return Parsimmon.formatError(r, s);
+    }
+  }
 }));
