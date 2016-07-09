@@ -147,7 +147,7 @@
     };
   });
 
-  var exprHas = seqMap(lexeme(keywordHas), lexeme(propname), types, function(_, field, type) {
+  var exprHas = seqMap(lexeme(keywordHas).then(lexeme(propname)), types, function(field, type) {
     return { type: 'hasField', field: field, fieldType: type };
   });
 

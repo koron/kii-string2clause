@@ -75,3 +75,9 @@ ok('12<X<34', {type:'range', field:'X', lowerLimit:12, upperLimit:34,
 ok('X IN (123 456 789)', {type:'in', field:'X', values:[123, 456, 789]});
 ok('X IN (123 "abc" true)', {type:'in', field:'X', values:[123, "abc", true]});
 ok('X IN (false)', {type:'in', field:'X', values:[false]});
+
+// HasFieldClause
+ok('HAS X STRING', {type:'hasField', field:'X', fieldType:'STRING'});
+ok('HAS Y INTEGER', {type:'hasField', field:'Y', fieldType:'INTEGER'});
+ok('HAS Z DECIMAL', {type:'hasField', field:'Z', fieldType:'DECIMAL'});
+ok('HAS XYZ BOOLEAN', {type:'hasField', field:'XYZ', fieldType:'BOOLEAN'});
