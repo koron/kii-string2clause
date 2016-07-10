@@ -81,3 +81,48 @@ ok('HAS X STRING', {type:'hasField', field:'X', fieldType:'STRING'});
 ok('HAS Y INTEGER', {type:'hasField', field:'Y', fieldType:'INTEGER'});
 ok('HAS Z DECIMAL', {type:'hasField', field:'Z', fieldType:'DECIMAL'});
 ok('HAS XYZ BOOLEAN', {type:'hasField', field:'XYZ', fieldType:'BOOLEAN'});
+
+// AndClause
+ok('X=10 AND Y=20', {type:'and', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'eq', field:'Y', value:20}
+]});
+ok('X=10 AND Y=20 AND Z=30', {type:'and', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'eq', field:'Y', value:20},
+  {type:'eq', field:'Z', value:30}
+]});
+
+// OrClause
+ok('X=10 OR Y=20', {type:'or', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'eq', field:'Y', value:20}
+]});
+ok('X=10 OR Y=20 OR Z=30', {type:'or', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'eq', field:'Y', value:20},
+  {type:'eq', field:'Z', value:30}
+]});
+
+// GroupClause
+ok('X=10 AND Y=20 OR Z=30', {type:'and', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'or', clauses:[
+    {type:'eq', field:'Y', value:20},
+    {type:'eq', field:'Z', value:30}
+  ]}
+]});
+ok('(X=10 AND Y=20) OR Z=30', {type:'or', clauses:[
+  {type:'and', clauses:[
+    {type:'eq', field:'X', value:10},
+    {type:'eq', field:'Y', value:20}
+  ]},
+  {type:'eq', field:'Z', value:30}
+]});
+ok('X=10 AND (Y=20 OR Z=30)', {type:'and', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'or', clauses:[
+    {type:'eq', field:'Y', value:20},
+    {type:'eq', field:'Z', value:30}
+  ]}
+]});

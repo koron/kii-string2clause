@@ -189,7 +189,7 @@
     return { type: 'not', clause: clause };
   });
 
-  var exprGroup = seqMap(lexeme(lparen), lexeme(alt(complex, exprNot)).skip(rparen), function(_, clause) {
+  var exprGroup = seqMap(lexeme(lparen).then(lexeme(alt(complex, exprNot))).skip(rparen), function(clause) {
     return clause;
   });
 
