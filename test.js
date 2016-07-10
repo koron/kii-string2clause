@@ -126,3 +126,19 @@ ok('X=10 AND (Y=20 OR Z=30)', {type:'and', clauses:[
     {type:'eq', field:'Z', value:30}
   ]}
 ]});
+
+// GeoBoxClause
+ok('X IN (100 200)-(300 400)', {type:'geobox', field:'X', box:{
+  ne:{_type:'point', lat:100, lon:200}, sw:{_type:'point', lat:300, lon:400}
+}});
+ok('Y IN (1.2 3.4) - (5.6 7.8)', {type:'geobox', field:'Y', box:{
+  ne:{_type:'point', lat:1.2, lon:3.4}, sw:{_type:'point', lat:5.6, lon:7.8}
+}});
+
+// GeoDistanceClause
+ok('X IN 123 FROM (456 789)', {type:'geodistance', field:'X',
+  radius:123, center:{_type:'point', lat:456, lon:789},
+  putDistanceInto:'myDist'});
+ok('Y IN 1.23 FROM (4.56 7.89)', {type:'geodistance', field:'Y',
+  radius:1.23, center:{_type:'point', lat:4.56, lon:7.89},
+  putDistanceInto:'myDist'});
