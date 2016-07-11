@@ -32,11 +32,14 @@
 
   var quote = string('"');
   var equal = string('=');
+  var neq = string('!=');
   var lparen = string('(');
   var rparen = string(')');
   var exclam = string('!');
   var hyphen = string('-');
   var period = string('.');
+  var amp = string('&');
+  var bar = string('|');
 
   var keywordTrue = string('true');
   var keywordFalse = string('false');
@@ -61,8 +64,8 @@
     };
   });
   var opCmp = alt(opLess, opGreater);
-  var opAnd = string('AND');
-  var opOr = string('OR');
+  var opAnd = alt(string('AND'), string('and'), amp).desc('AND operator');
+  var opOr = alt(string('OR'), string('or'), bar).desc('OR operator');
   var opNot = string('NOT');
   var opPrefix = string('^=');
 
@@ -92,17 +95,15 @@
     return null;
   });
   var value = alt(qstr, number, bool, vnull).desc('a value');
-  var pos = seqMap(lexeme(lparen), lexeme(number), lexeme(number).skip(rparen), function(_, lat, lon) {
+  var pos = seqMap(lexeme(lparen).then(lexeme(number)), lexeme(number).skip(rparen), function(lat, lon) {
     return { "_type": "point", lat: lat, lon: lon };
   });
 
   var propname = regex(/[a-zA-Z_][0-9a-zA-Z_]*/);
 
   var simple = lazy('simple expression', function() {
-    return alt(exprEq, exprPrefix, exprRange, exprBetween,
-        exprGeoBox, exprGeoDist,
-        exprIn, exprHas,
-        exprNot, exprGroup);
+    return alt(exprEq, exprNeq, exprPrefix, exprRange, exprBetween,
+        exprGeoBox, exprGeoDist, exprIn, exprHas, exprNot, exprGroup);
   });
 
   var complex = lazy('complex expression', function() {
@@ -115,6 +116,10 @@
 
   var exprEq = seqMap(lexeme(propname).skip(lexeme(equal)), value, function(field, value) {
     return { type: 'eq', field: field, value: value };
+  });
+
+  var exprNeq = seqMap(lexeme(propname).skip(lexeme(neq)), value, function(field, value) {
+    return { type: 'not', clause: { type: 'eq', field: field, value: value } };
   });
 
   var exprPrefix = seqMap(lexeme(propname).skip(lexeme(alt(opPrefix, keywordPrefix))), qstr, function(field, prefix) {
