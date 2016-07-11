@@ -92,7 +92,7 @@
     return null;
   });
   var value = alt(qstr, number, bool, vnull).desc('a value');
-  var pos = seqMap(lexeme(lparen), lexeme(number), lexeme(number).skip(rparen), function(_, lat, lon) {
+  var pos = seqMap(lexeme(lparen).then(lexeme(number)), lexeme(number).skip(rparen), function(lat, lon) {
     return { "_type": "point", lat: lat, lon: lon };
   });
 
