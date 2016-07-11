@@ -38,6 +38,8 @@
   var exclam = string('!');
   var hyphen = string('-');
   var period = string('.');
+  var amp = string('&');
+  var bar = string('|');
 
   var keywordTrue = string('true');
   var keywordFalse = string('false');
@@ -62,8 +64,8 @@
     };
   });
   var opCmp = alt(opLess, opGreater);
-  var opAnd = string('AND');
-  var opOr = string('OR');
+  var opAnd = alt(string('AND'), string('and'), amp).desc('AND operator');
+  var opOr = alt(string('OR'), string('or'), bar).desc('OR operator');
   var opNot = string('NOT');
   var opPrefix = string('^=');
 

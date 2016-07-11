@@ -92,6 +92,14 @@ ok('X=10 AND Y=20 AND Z=30', {type:'and', clauses:[
   {type:'eq', field:'Y', value:20},
   {type:'eq', field:'Z', value:30}
 ]});
+ok('X=10 and Y=20', {type:'and', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'eq', field:'Y', value:20}
+]});
+ok('X=10 & Y=20', {type:'and', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'eq', field:'Y', value:20}
+]});
 
 // OrClause
 ok('X=10 OR Y=20', {type:'or', clauses:[
@@ -102,6 +110,14 @@ ok('X=10 OR Y=20 OR Z=30', {type:'or', clauses:[
   {type:'eq', field:'X', value:10},
   {type:'eq', field:'Y', value:20},
   {type:'eq', field:'Z', value:30}
+]});
+ok('X=10 or Y=20', {type:'or', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'eq', field:'Y', value:20}
+]});
+ok('X=10 | Y=20', {type:'or', clauses:[
+  {type:'eq', field:'X', value:10},
+  {type:'eq', field:'Y', value:20}
 ]});
 
 // GroupClause
