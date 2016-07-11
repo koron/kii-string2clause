@@ -43,8 +43,12 @@ Where X means property name.
     *   `HAS X {TYPE}` - type: `STRING`, `INTEGER`, `DECIMAL`, `BOOLEAN`
 *   and
     *   `{EXPR1} AND {EXPR2} [...AND {EXPRn}]`
+    *   `{EXPR1} and {EXPR2} [...and {EXPRn}]` - not accept mixed cases: `And`, `aNd` or so.
+    *   `{EXPR1} & {EXPR2} [...& {EXPRn}]`
 *   or
     *   `{EXPR1} OR {EXPR2} [...OR {EXPRn}]`
+    *   `{EXPR1} or {EXPR2} [...or {EXPRn}]` - not accept mixed cases.
+    *   `{EYPR1} | {EXPR2} [...| {EXPRn}]`
 *   not
     *   `NOT {EXPR}`
     *   `! {EXPR}`
@@ -52,6 +56,12 @@ Where X means property name.
     *   `X IN (11.0 1.0) - (1.0 17.0)`
 *   geoDistance
     *   `X IN 1023 FROM (11.0 1.0)`
+
+### Composite Clauses
+
+*   not + eq
+    *   `X != 123`
+    *   `X != "abc"`
 
 ### Other Expressions
 
