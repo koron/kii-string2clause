@@ -20,9 +20,10 @@
 
 ### Expression for Query Types
 
+Where X means property name.
+
 *   eq
     *   `X = "abc"`
-    *   ~~`X = abc` - by string `abc`~~ (not supported yet)
     *   `X = 123` - by integer
     *   `X = "123"` - by string
 *   prefix
@@ -34,8 +35,6 @@
     *   `X >= 20`
     *   `X > 20`
     *   `10 <= X < 20` - it would be great
-    *   ~~`X BETWEEN 10 AND 20` - easy for parser, but should be consider for
-        include/exclude values~~
 *   all
     *   ~~` ` - completely empty~~
 *   in
@@ -66,4 +65,3 @@
         *   comply with [spec of JSON's **number**](http://json.org/)
     *   `true`, `false` - boolean values
     *   `null` - null value
-    *   ~~`abc` - string `abc`~~ (not supported yet)
