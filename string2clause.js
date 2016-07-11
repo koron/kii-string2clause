@@ -1,17 +1,17 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define([], factory);
+    define(['parsimmon'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory();
+    module.exports = factory(require('parsimmon'));
   } else {
     // Browser globals (root is window).
-    root.Parser = factory();
+    root.Parser = factory(root.Parsimmon);
   }
-}(this, function() {
+}(this, function(Parsimmon) {
   "use strict";
 
   var string = Parsimmon.string;
@@ -46,12 +46,25 @@
   var keywordHas = string('HAS');
   var keywordFrom = string('FROM');
 
-  var opLess = alt(string('<='), string('<'));
-  var opGreater = alt(string('>='), string('>'));
+  var opLess = alt(string('<='), string('<')).map(function(op) {
+    return {
+      limitField: 'upperLimit',
+      includedField: 'upperIncluded',
+      includedValue: op === '<=',
+    };
+  });
+  var opGreater = alt(string('>='), string('>')).map(function(op) {
+    return {
+      limitField: 'lowerLimit',
+      includedField: 'lowerIncluded',
+      includedValue: op === '>=',
+    };
+  });
   var opCmp = alt(opLess, opGreater);
   var opAnd = string('AND');
   var opOr = string('OR');
   var opNot = string('NOT');
+  var opPrefix = string('^=');
 
   var typeString = string('STRING');
   var typeInteger = string('INTEGER');
@@ -61,7 +74,7 @@
 
   var qstr = seq(quote, regex(/([^"\\]|\\.)*/), quote).map(function(m) {
     return JSON.parse(m.join(''));
-  });
+  }).desc("a quoted string");
 
   var digits = regex(/[0-9]+/);
   var vint = regex(/[+-]?(0|[1-9][0-9]*)/);
@@ -78,7 +91,7 @@
   var vnull = keywordNull.map(function(s) {
     return null;
   });
-  var value = alt(qstr, number, bool, vnull);
+  var value = alt(qstr, number, bool, vnull).desc('a value');
   var pos = seqMap(lexeme(lparen), lexeme(number), lexeme(number).skip(rparen), function(_, lat, lon) {
     return { "_type": "point", lat: lat, lon: lon };
   });
@@ -100,36 +113,18 @@
     return alt(complex, simple);
   });
 
-  var exprEq = seq(lexeme(propname), lexeme(equal), value).map(function(m) {
-    return { type: 'eq', field: m[0], value: m[2] };
+  var exprEq = seqMap(lexeme(propname).skip(lexeme(equal)), value, function(field, value) {
+    return { type: 'eq', field: field, value: value };
   });
 
-  var exprPrefix = seq(lexeme(propname), lexeme(keywordPrefix), qstr).map(function(m) {
-    return { type: 'prefix', field: m[0], prefix: m[2] };
+  var exprPrefix = seqMap(lexeme(propname).skip(lexeme(alt(opPrefix, keywordPrefix))), qstr, function(field, prefix) {
+    return { type: 'prefix', field: field, prefix: prefix };
   });
 
-  var exprRange = seq(lexeme(propname), lexeme(opCmp), number).map(function(m) {
-    var c = { type: 'range', field: m[0] };
-    switch (m[1]) {
-      case '<':
-        c['upperLimit'] = m[2];
-        c['upperIncluded'] = false;
-        break;
-      case '<=':
-        c['upperLimit'] = m[2];
-        c['upperIncluded'] = true;
-        break;
-      case '>':
-        c['lowerLimit'] = m[2];
-        c['lowerIncluded'] = false;
-        break;
-      case '>=':
-        c['lowerLimit'] = m[2];
-        c['lowerIncluded'] = true;
-        break;
-      default:
-        // FIXME: raise error.
-    }
+  var exprRange = seqMap(lexeme(propname), lexeme(opCmp), number, function(field, op, limit) {
+    var c = { type: 'range', field: field };
+    c[op.limitField] = limit;
+    c[op.includedField] = op.includedValue;
     return c;
   });
 
@@ -138,9 +133,9 @@
       type: 'range',
       field: field,
       lowerLimit: lowerVal,
-      lowerIncluded: lowerOp === "<=",
+      lowerIncluded: lowerOp.includedValue,
       upperLimit: upperVal,
-      upperIncluded: upperOp === "<=",
+      upperIncluded: upperOp.includedValue,
     };
   });
 
@@ -152,7 +147,7 @@
     };
   });
 
-  var exprHas = seqMap(lexeme(keywordHas), lexeme(propname), types, function(_, field, type) {
+  var exprHas = seqMap(lexeme(keywordHas).then(lexeme(propname)), types, function(field, type) {
     return { type: 'hasField', field: field, fieldType: type };
   });
 
@@ -190,13 +185,20 @@
     }
   });
 
-  var exprNot = seqMap(lexeme(alt(exclam, opNot)), expr, function(_, clause) {
+  var exprNot = seqMap(lexeme(alt(exclam, opNot)).then(expr), function(clause) {
     return { type: 'not', clause: clause };
   });
 
-  var exprGroup = seqMap(lexeme(lparen), lexeme(alt(complex, exprNot)).skip(rparen), function(_, clause) {
+  var exprGroup = seqMap(lexeme(lparen).then(lexeme(alt(complex, exprNot))).skip(rparen), function(clause) {
     return clause;
   });
 
-  return expr;
+  return {
+    parse: function(s) {
+      return expr.parse(s);
+    },
+    formatError: function(r, s) {
+      return Parsimmon.formatError(r, s);
+    }
+  }
 }));
