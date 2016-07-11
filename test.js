@@ -142,3 +142,7 @@ ok('X IN 123 FROM (456 789)', {type:'geodistance', field:'X',
 ok('Y IN 1.23 FROM (4.56 7.89)', {type:'geodistance', field:'Y',
   radius:1.23, center:{_type:'point', lat:4.56, lon:7.89},
   putDistanceInto:'myDist'});
+
+// Not+EqualClause
+ok('X!=123', {type:'not', clause: {type:'eq', field:'X', value:123}});
+ok('Y!="abc"', {type:'not', clause: {type:'eq', field:'Y', value:"abc"}});
