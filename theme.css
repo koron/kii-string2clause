@@ -21,24 +21,29 @@ body {
 }
 
 #query-form {
-  display: block;
+  display: flex;
   height: 40%;
+  flex-direction: row;
+  align-items: baseline;
 }
 
 #query-input {
+  flex: 1 1 auto;
   box-sizing: border-box;
-  width: 100%;
 
   font-size: 16pt;
   font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
 }
 
 #query-clear {
+  flex: none;
   background-color: #6666ff;
   color: #fff;
   border: none;
   float: right;
-  margin-top: 0.5ex;
+
+  margin-left: 0.5ex;
+  padding: 3px 8px;
 
   font-size: 16pt;
   font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
@@ -49,6 +54,7 @@ body {
   box-sizing: border-box;
   height: 30%;
   padding-top: 1ex;
+  overflow: auto;
 }
 
 #description {
@@ -56,6 +62,7 @@ body {
   box-sizing: border-box;
   height: 30%;
   padding-top: 1ex;
+  overflow: auto;
 }
 
 #result-clause {
