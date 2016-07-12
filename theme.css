@@ -83,8 +83,20 @@ h3 {
 }
 
 .query-examples {
+  padding-left: 0;
+  column-count: 2;
   font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
   font-size: 10.5pt;
+}
+
+.query-examples > li {
+  list-style-type: none;
+  padding: 0.5ex 0 0 1ex;
+  cursor: pointer;
+}
+.query-examples > li:hover {
+  color: white;
+  background-color: blue;
 }
 
 div > p {
