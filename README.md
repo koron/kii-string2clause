@@ -1,6 +1,6 @@
 # free style query
 
-<http://docs.kii.com/en/guides/rest/managing-data/object-storages/querying/>
+Convert query string to [Kii Cloud's clause][kii-querying]
 
 ## Query Types
 
@@ -75,3 +75,5 @@ Where X means property name.
         *   comply with [spec of JSON's **number**](http://json.org/)
     *   `true`, `false` - boolean values
     *   `null` - null value
+
+[kii-querying]: <http://docs.kii.com/en/guides/rest/managing-data/object-storages/querying/>
